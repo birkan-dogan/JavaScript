@@ -90,3 +90,64 @@ h1 => "Heading"
 }
 
 */
+
+// there is actually another way to create a new map without using the .set() method
+
+const question = new Map([
+  ["question", "What is the best programming language for web development?"],
+  [1, "C"],
+  [2, "Python"],
+  [3, "JavaScript"],
+  ["correct", 3],
+  [true, "Correct"],
+  [false, "Try again"],
+]);
+
+console.log(question);
+
+// {'question' => 'What is the best programming language for web development?', 1 => 'C', 2 => 'Python', 3 => 'JavaScript', 'correct' => 3, …}
+
+// converting an object to a map is really easy, just consider the return statement of Object.entries() method.
+
+const openingHours = {
+  thu: {
+    open: 12,
+    close: 22,
+  },
+  fri: {
+    open: 11,
+    close: 23,
+  },
+  sat: { open: 0, close: 24 },
+};
+
+const hoursMap = new Map(Object.entries(openingHours));
+console.log(hoursMap); // {'thu' => {open: 12, close: 22}, 'fri' => {open: 11, close: 23}, 'sat' => {…}}
+
+console.log(question.get("question"));
+
+// Iteration is possible on maps because as we know, maps are also iterables. So, for loop is available on maps
+
+for (const [key, value] of question) {
+  if (typeof key === "number") {
+    console.log(`Answer ${key}: ${value}`);
+  }
+}
+
+// we can convert a map to an array by using the spread operator
+
+console.log([...question]); // [Array(2), [1, 'C'], [2, 'Python'], [3, 'JavaScript'],['correct', 3], Array(2), Array(2)]
+
+/*
+also, we can use objects' methods on maps
+
+question.entries()
+question.keys()
+question.values()
+
+*/
+
+question.values(); // this returns a MapIterator, we can spread them and create a new array
+
+console.log([...question.values()]);
+// ['What is the best programming language for web development?', 'C', 'Python', 'JavaScript', 3, 'Correct', 'Try again']
