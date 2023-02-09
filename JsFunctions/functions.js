@@ -129,3 +129,119 @@ const sum = function (a) {
   };
 };
 console.log(sum(1)(2)(3)(4)(5)()); // 15
+
+console.log("***** The Call and Apply Methods *****");
+
+const lufthansa = {
+  airline: "Lufthansa",
+  code: "LH",
+  bookings: [],
+  book: function (flightNum, passengerName) {
+    console.log(
+      `${passengerName} booked a seat on ${this.airline} flight ${this.code}${flightNum}`
+    );
+    this.bookings.push({ flight: `${this.code}${flightNum}`, passengerName });
+  },
+};
+
+lufthansa.book(239, "Jerry Seinfeld");
+lufthansa.book(635, "George Constanza");
+console.log(lufthansa.bookings);
+
+const eurowings = {
+  name: "Eurowings",
+  code: "EW",
+  bookings: [],
+};
+
+const book = lufthansa.book; // simply taking the function as a value and store it a variable (thanks to first-class functions)
+
+/*
+book(23, "Cosmo Kramer")  --> will be return an error, because we have a this keyword in the book() method. But now, the book() is a regular function and cannot find a this property properly. We need to tell JavaScript what the this keyword should be like.
+
+    If we want to book a lufthansa flight, the this keyword should point to lufthansa.
+    If we want to book a eurowings flight, the this keyword should point to eurowings.
+
+There are 3 function methods to do that
+    call, apply, bind
+    (functions are objects, so functions can have methods)
+
+*/
+
+console.log("** Call Method **");
+
+// manually manipulating the this keyword
+// With call(), an object can use a method belonging to another object.
+
+const person = {
+  fullName: function () {
+    return this.firstName + " " + this.lastName;
+  },
+};
+
+const person1 = {
+  firstName: "John",
+  lastName: "Doe",
+};
+
+const person2 = {
+  firstName: "Mary",
+  lastName: "Doe",
+};
+
+// This example calls the fullName method of person, using it on person1:
+person.fullName.call(person1); // This will return "John Doe":
+
+// The call() method can accept arguments:
+
+book.call(eurowings, 23, "Cosmo Kramer");
+// in the call method, the first argument is exactly what we want the this keyword to point to (this keyword setting to first argument) . And the rest of the arguments
+
+console.log(eurowings.bookings); // {flight: 'EW23', passengerName: 'Cosmo Kramer'}
+
+book.call(lufthansa, 55, "Newman Postman");
+
+const swiss = {
+  airline: "Swiss Air Lines",
+  code: "LX",
+  bookings: [],
+};
+
+book.call(swiss, 444, "Tim Whatley");
+
+// another example
+const startUp = {
+  address: function (continent, country) {
+    return `${continent} ${country} ${this.city} ${this.name}`;
+  },
+};
+
+const startUp1 = {
+  city: "Oslo",
+  name: "Spotify",
+};
+
+startUp.address.call(startUp1, "Europe", "Norway"); // Europe Norway Oslo Spotify
+
+const startUp2 = {
+  city: "Madrid",
+  name: "Art Design",
+};
+
+startUp.address.call(startUp2, "Europe", "Spain");
+
+console.log("** Apply Method **");
+
+// The apply method does basically the same thing that call method does, the only difference is that apply method takes an array of the arguments after the this keyword
+
+const flightData = [582, "Dwight Schrute"];
+
+book.apply(swiss, flightData); // it works
+book.call(swiss, ...flightData); // it works too, thanks to spread operator.
+
+// Simulate a Max Method on Arrays
+// Since JavaScript arrays do not have a max() method, we can apply the Math.max() method instead.
+
+const arr1 = [1, 5, 3, 7, 9, 55, 22];
+
+console.log(Math.max.apply(null, arr1)); // will return 55
