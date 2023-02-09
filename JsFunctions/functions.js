@@ -245,3 +245,53 @@ book.call(swiss, ...flightData); // it works too, thanks to spread operator.
 const arr1 = [1, 5, 3, 7, 9, 55, 22];
 
 console.log(Math.max.apply(null, arr1)); // will return 55
+
+
+console.log("bind() method");
+
+/*
+Just like the call() method, an object can borrow a method from another object.
+The difference is that bind() does not immediately call the function. Instead it returns a new function where the `this` keyword is bound.
+
+So, it sets `this` keyword to whatever value we pass into bind.
+*/
+
+// example)
+
+// object definition
+const student1 = {
+  name: "Hank",
+  grade: "5",
+  introduction: function () {
+    console.log(`${this.name} studies in grade ${this.grade}.`);
+  },
+};
+
+// object definition
+const student2 = {
+  name: "Jimmy",
+  grade: " 6",
+};
+
+// the object student2 is borrowing introduction method from student1
+const result = student1.introduction.bind(student2);
+
+result(); // Jimmy  studies in grade  6.
+
+// Example 2: Using bind() Method with two Parameters
+
+// object definition
+const candidate1 = {
+  name: "George",
+  introduction: function (score) {
+    console.log(`${this.name} scored ${score} in an exam`);
+  },
+};
+
+// object definition
+const candidate2 = {
+  name: "Kramer",
+};
+
+const candidateResult = candidate1.introduction.bind(candidate2, 90);
+candidateResult(); // Kramer scored 90 in an exam
