@@ -245,3 +245,162 @@ book.call(swiss, ...flightData); // it works too, thanks to spread operator.
 const arr1 = [1, 5, 3, 7, 9, 55, 22];
 
 console.log(Math.max.apply(null, arr1)); // will return 55
+
+
+console.log("bind() method");
+
+/*
+Just like the call() method, an object can borrow a method from another object.
+The difference is that bind() does not immediately call the function. Instead it returns a new function where the `this` keyword is bound.
+
+So, it sets `this` keyword to whatever value we pass into bind.
+*/
+
+// example)
+
+// object definition
+const student1 = {
+  name: "Hank",
+  grade: "5",
+  introduction: function () {
+    console.log(`${this.name} studies in grade ${this.grade}.`);
+  },
+};
+
+// object definition
+const student2 = {
+  name: "Jimmy",
+  grade: " 6",
+};
+
+// the object student2 is borrowing introduction method from student1
+const result = student1.introduction.bind(student2);
+
+result(); // Jimmy  studies in grade  6.
+
+// Example 2: Using bind() Method with two Parameters
+
+// object definition
+const candidate1 = {
+  name: "George",
+  introduction: function (score) {
+    console.log(`${this.name} scored ${score} in an exam`);
+  },
+};
+
+// object definition
+const candidate2 = {
+  name: "Kramer",
+};
+
+const candidateResult = candidate1.introduction.bind(candidate2, 90);
+candidateResult(); // Kramer scored 90 in an exam
+
+
+console.log("***** Closures *****");
+
+/*
+
+In JavaScript, closure provides access to the outer scope of a function from inside the inner function, even after the outer function has closed
+
+*/
+
+// outer function
+const greet = function () {
+  let name = "Jerry";
+
+  // inner function
+  return function () {
+    // accessing name variable
+
+    return `Hi, ${name}`;
+  };
+};
+
+const displayName = greet();
+console.log(displayName); // returns the function definition
+console.log(displayName()); // returns the value --> Hi, Jerry
+
+// another example
+
+const secureBooking = function () {
+  let passengerCount = 0;
+
+  return function () {
+    /*
+    Any function always has access to the variable environment of the execution context in which the function was created.
+    */
+    passengerCount++;
+    console.log(`${passengerCount} passengers`);
+  };
+};
+
+const booker = secureBooking();
+booker();
+
+/*
+the booker() function works to increase the passengerCount variable.
+
+However, this variable is not in the current scope.
+And JavaScript will look into the `CLOSURE` and see if it can find the variable there.
+
+It does this even before looking at the scope chain
+*/
+
+booker();
+booker();
+
+// to look at closure of the function, we can use console.dir(functionName)
+console.dir(booker);
+
+// example for creating closure
+
+let f;
+const g = function () {
+  const a = 23;
+  f = function () {
+    console.log(a * 2);
+  };
+};
+
+g(); // assigning a function to f variable and creating closure there
+
+// f() function can reach the `a` variable that is in the function scope thanks to closure
+f(); // 46
+
+const h = function () {
+  const b = 777;
+  f = function () {
+    console.log(b * 2);
+  };
+};
+
+h();
+// f() function can reach the `b` variable that is in the function scope thanks to closure
+f(); // 1554
+console.dir(f);
+
+// another example
+
+const boardPassengers = function (numPassenger, wait) {
+  const perGroup = numPassenger / 3;
+
+  setTimeout(function () {
+    console.log(`We are now boarding all ${numPassenger} passengers`);
+    console.log(`There are 3 groups, each with ${perGroup} passengers`);
+  }, wait * 1000);
+
+  console.log(`Will start boarding in ${wait} seconds`);
+};
+
+boardPassengers(180, 3);
+
+/*
+Outputs:
+
+Will start boarding in 3 seconds
+We are now boarding all 180 passengers
+There are 3 groups, each with 60 passengers
+
+*/
+
