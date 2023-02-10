@@ -295,3 +295,112 @@ const candidate2 = {
 
 const candidateResult = candidate1.introduction.bind(candidate2, 90);
 candidateResult(); // Kramer scored 90 in an exam
+
+
+console.log("***** Closures *****");
+
+/*
+
+In JavaScript, closure provides access to the outer scope of a function from inside the inner function, even after the outer function has closed
+
+*/
+
+// outer function
+const greet = function () {
+  let name = "Jerry";
+
+  // inner function
+  return function () {
+    // accessing name variable
+
+    return `Hi, ${name}`;
+  };
+};
+
+const displayName = greet();
+console.log(displayName); // returns the function definition
+console.log(displayName()); // returns the value --> Hi, Jerry
+
+// another example
+
+const secureBooking = function () {
+  let passengerCount = 0;
+
+  return function () {
+    /*
+    Any function always has access to the variable environment of the execution context in which the function was created.
+    */
+    passengerCount++;
+    console.log(`${passengerCount} passengers`);
+  };
+};
+
+const booker = secureBooking();
+booker();
+
+/*
+the booker() function works to increase the passengerCount variable.
+
+However, this variable is not in the current scope.
+And JavaScript will look into the `CLOSURE` and see if it can find the variable there.
+
+It does this even before looking at the scope chain
+*/
+
+booker();
+booker();
+
+// to look at closure of the function, we can use console.dir(functionName)
+console.dir(booker);
+
+// example for creating closure
+
+let f;
+const g = function () {
+  const a = 23;
+  f = function () {
+    console.log(a * 2);
+  };
+};
+
+g(); // assigning a function to f variable and creating closure there
+
+// f() function can reach the `a` variable that is in the function scope thanks to closure
+f(); // 46
+
+const h = function () {
+  const b = 777;
+  f = function () {
+    console.log(b * 2);
+  };
+};
+
+h();
+// f() function can reach the `b` variable that is in the function scope thanks to closure
+f(); // 1554
+console.dir(f);
+
+// another example
+
+const boardPassengers = function (numPassenger, wait) {
+  const perGroup = numPassenger / 3;
+
+  setTimeout(function () {
+    console.log(`We are now boarding all ${numPassenger} passengers`);
+    console.log(`There are 3 groups, each with ${perGroup} passengers`);
+  }, wait * 1000);
+
+  console.log(`Will start boarding in ${wait} seconds`);
+};
+
+boardPassengers(180, 3);
+
+/*
+Outputs:
+
+Will start boarding in 3 seconds
+We are now boarding all 180 passengers
+There are 3 groups, each with 60 passengers
+
+*/
+
